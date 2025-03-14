@@ -28,7 +28,7 @@ Now, run the `polycompile` command, providing the path to a JS file, a Python fi
 polycompile in.js in.py out.js.py
 ```
 
-> **🚧 WIP**: The current file convention for Polycompile is either `.js.py` or `.py.js`. This is becuase Node refuses to parse files of "nonexistent" extensions, so it has to end in a pre-existing file extension.
+> **🚧 WIP**: The current file convention for Polycompile is either `.js.py` or `.py.js` (ideally in alphabetical order, so `.js.py`). This is becuase Node refuses to parse files of "nonexistent" extensions, so it has to end in a pre-existing file extension.
 
 ### Test it out
 
