@@ -11,6 +11,8 @@ lambda: eval("console.log('Hello JS')")
 
 ## Installation & Use
 
+Here's how you can get started with Polycompile in a few simple steps.
+
 ### Install `polycompile` on NPM:
 
 ```bash
