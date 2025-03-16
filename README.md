@@ -1,5 +1,7 @@
 # Polycompiler
 
+> See how it works [on YouTube](https://youtu.be/dbf9e7okjm8).
+
 An experimental project to attempt to merge arbitrary Python and JS code into one source file.
 
 For example, the following code prints `Hello JS` when run with Node, and `Hello Python` when run with Python 3.
@@ -51,6 +53,8 @@ python3 out.py.js
 The best answer for this is honestly "for fun". However, it could also possibly be a possible solution for a single file that can be targeted to both Python and JS audiences (who may perhaps not have the other installed).
 
 ## How does this work?
+
+> See my thought process in developing this [on YouTube](https://youtu.be/dbf9e7okjm8).
 
 Let's work through this code to see how Polycompiler works:
 
