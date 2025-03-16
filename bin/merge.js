@@ -7,13 +7,13 @@ async function main() {
     const args = process.argv.slice(2);
 
     if (args.length < 2) {
-        console.error('Usage: polycompile <file1> <file2> [output-file]');
+        console.error('Usage: polycompiler <file1> <file2> [output-file]');
         process.exit(1);
     }
 
     const file1Path = args[0];
     const file2Path = args[1];
-    const outputPath = args[2] || 'out/result.js.py';
+    const outputPath = args[2] || 'out/result.py.js';
 
     // Check if files exist
     try {
@@ -79,7 +79,7 @@ function mergeFiles(pythonContent, jsContent) {
         .replace(/\n/g, '\\n')          // Escape newlines
         .replace(/"/g, '\\"');          // Escape double quotes
 
-    return `1 // (lambda: exec("""${escapedPythonContent}""", globals()))()
+    return `1 // (lambda: exec("""${escapedPythonContent}""", globals()) or 1)()
 lambda: eval("${escapedJsContent}")`;
 }
 main().catch(err => {
