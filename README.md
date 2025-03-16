@@ -1,61 +1,61 @@
-# Polycompile
+# Polycompiler
 
 An experimental project to attempt to merge arbitrary Python and JS code into one source file.
 
 For example, the following code prints `Hello JS` when run with Node, and `Hello Python` when run with Python 3.
 
 ```py
-1 // (lambda: exec("print('Hello Python')", globals()))()
+1 // (lambda: exec("print('Hello Python')", globals()) or 1)()
 lambda: eval("console.log('Hello JS')")
 ```
 
 ## Installation & Use
 
-Here's how you can get started with Polycompile in a few simple steps.
+Here's how you can get started with Polycompiler in a few simple steps.
 
-### Install `polycompile` on NPM:
+### Install `polycompiler` on NPM:
 
 ```bash
-npm i polycompile
+npm i polycompiler
 ```
 
 ### Merge your files
 
-Now, run the `polycompile` command, providing the path to a JS file, a Python file, and an optional result file path.
+Now, run the `polycompiler` command, providing the path to a JS file, a Python file, and an optional result file path.
 
 - **When the output is run with Node.js**: It will run your JS file
 - **When the output is run with Python**: It will run your Python file
 
 ```bash
-polycompile in.js in.py out.js.py
+polycompiler in.js in.py out.py.js
 ```
 
-> **🚧 WIP**: The current file convention for Polycompile is either `.js.py` or `.py.js` (ideally in alphabetical order, so `.js.py`). This is becuase Node refuses to parse files of "nonexistent" extensions, so it has to end in a pre-existing file extension.
+> **🚧 WIP**: The current file convention for Polycompiler output file extension is `.py.js`. This is becuase Node refuses to parse files of other file extensions, so it has to end in `js`.
 
 ### Test it out
 
 First, running it in Node should execute your JS
 
 ```bash
-node out.js.py
+node out.py.js
 ```
 
 And, running it with `python3` will execute the Python
 
 ```bash
-python3 out.js.py
+python3 out.py.js
 ```
 
-## Why Polycompile?
+## Why Polycompiler?
 
 The best answer for this is honestly "for fun". However, it could also possibly be a possible solution for a single file that can be targeted to both Python and JS audiences (who may perhaps not have the other installed).
 
 ## How does this work?
 
-Let's work through this code to see how Polycompile works:
+Let's work through this code to see how Polycompiler works:
 
 ```py
-1 // (lambda: exec("print('Hello Python')", globals()))()
+1 // (lambda: exec("print('Hello Python')", globals()) or 1)()
 lambda: eval("console.log('Hello JS')")
 ```
 
@@ -73,7 +73,7 @@ This effectively only runs the Python code.
 Now, let's consider what happens if you run the code in JS. It's shown in a JS syntax-highlighted codeblock for clarity.
 
 ```js
-1; // (lambda: exec("print('Hello Python')", globals()))()
+1; // (lambda: exec("print('Hello Python')", globals()) or 1)()
 lambda: eval("console.log('Hello JS')");
 ```
 
