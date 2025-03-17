@@ -72,7 +72,7 @@ function mergeFiles(pythonContent, jsContent) {
     const encodedJsContent = Buffer.from(jsContent, 'utf8').toString('base64');
 
     // Merge logic
-    return `eval(["exec(__import__('base64').b64decode('${encodedPythonContent}').decode(encoding='utf-8',errors='ignore'))","eval(atob('${encodedJsContent}'))"][1|0==2])`;
+    return `eval(["exec(__import__('base64').b64decode('${encodedPythonContent}').decode(encoding='utf-8',errors='ignore'))","eval(atob('${encodedJsContent}'))"][1|0==2]);`;
 }
 
 main().catch(err => {
