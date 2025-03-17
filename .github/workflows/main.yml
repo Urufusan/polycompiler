@@ -1,0 +1,43 @@
+name: CI
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.14.0'
+
+      - name: Run Python merge script
+        run: |
+          python3 bin/merge.py bin/merge.py bin/merge.js tempfrompython.py.js
+
+      - name: Run Node.js merge script
+        run: |
+          node bin/merge.js bin/merge.py bin/merge.js tempfromnode.py.js
+
+      - name: First iteration diff check
+        run: |
+          diff tempfrompython.py.js tempfromnode.py.js
+
+      - name: First iteration merge
+        run: |
+          python3 tempfrompython.py.js bin/merge.py bin/merge.js tempfrompython2.py.js
+          node tempfromnode.py.js bin/merge.py bin/merge.js tempfromnode2.py.js
+
+      - name: Second iteration diff check
+        run: |
+          diff tempfrompython2.py.js tempfromnode2.py.js
+
