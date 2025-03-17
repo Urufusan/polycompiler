@@ -1,2 +1,1 @@
-1 // (lambda: exec("""print("Hello, World!")""", globals()) or 1)()
-lambda: eval("console.log(\"Hello, World!\");\n")
+eval(["exec(__import__('base64').b64decode('cHJpbnQoIkhlbGxvLCBXb3JsZCEiKQ==').decode(encoding='utf-8',errors='ignore'))","eval(atob('Y29uc29sZS5sb2coIkhlbGxvLCBXb3JsZCEiKTsK'))"][1|0==2])

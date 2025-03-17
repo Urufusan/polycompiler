@@ -67,21 +67,14 @@ async function main() {
  * @returns {string} - Merged content
  */
 function mergeFiles(pythonContent, jsContent) {
-    // Escape backslashes first, then newlines, then quotes
-    const escapedPythonContent = pythonContent
-        .replace(/\\/g, '\\\\')         // Double backslashes first
-        .replace(/\n/g, '\\n')          // Escape newlines
-        .replace(/"""/g, '\\"\\"\\"');  // Escape triple quotes
+    // Base64 encode the contents
+    const encodedPythonContent = Buffer.from(pythonContent, 'utf8').toString('base64');
+    const encodedJsContent = Buffer.from(jsContent, 'utf8').toString('base64');
 
-    // Escape backslashes first, then newlines, then quotes
-    const escapedJsContent = jsContent
-        .replace(/\\/g, '\\\\')         // Double backslashes first
-        .replace(/\n/g, '\\n')          // Escape newlines
-        .replace(/"/g, '\\"');          // Escape double quotes
-
-    return `1 // (lambda: exec("""${escapedPythonContent}""", globals()) or 1)()
-lambda: eval("${escapedJsContent}")`;
+    // Merge logic
+    return `eval(["exec(__import__('base64').b64decode('${encodedPythonContent}').decode(encoding='utf-8',errors='ignore'))","eval(atob('${encodedJsContent}'))"][1|0==2])`;
 }
+
 main().catch(err => {
     console.error('Error:', err);
     process.exit(1);
