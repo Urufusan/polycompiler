@@ -83,7 +83,7 @@ def merge_files(python_content, js_content, compression=False):
     # eval(["print('Hello, py!')", "console.log('Hello, js!')"][1|0==2])
     # await new Response((await new Blob([Uint8Array.from(atob("eNorKMrMK9FQ8kjNycnXUQjPL8pJUVTSBABZLgcs"),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream("deflate")))).text();
     if compression:
-        return f"""eval(["exec(__import__('zlib').decompress(__import__('base64').b64decode('{str_python_content}')).decode(encoding='utf-8',errors='ignore'))","await new Response((await new Blob([Uint8Array.from(atob('{str_js_content}'),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream('deflate')))).text()"][1|0==2]);"""
+        return f"""eval(["exec(__import__('zlib').decompress(__import__('base64').b64decode('{str_python_content}')).decode(encoding='utf-8',errors='ignore'))","await new Response((await new Blob([Uint8Array.from(atob('{str_js_content}'),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream('deflate')))).text().then(eval)"][1|0==2]);"""
     else:
         return f"""eval(["exec(__import__('base64').b64decode('{str_python_content}').decode(encoding='utf-8',errors='ignore'))","eval(atob('{str_js_content}'))"][1|0==2]);"""
 
