@@ -3,7 +3,7 @@ name: CI
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-22.04
 
     steps:
@@ -42,8 +42,6 @@ jobs:
           diff tempfrompython2.py.js tempfromnode2.py.js
 
       - name: Compression test
-        env: 
-          DEFLIMIT: 15
         run: |
           python3 tempfrompython.py.js bin/merge.py bin/merge.js tempfrompythoncompressed.py.js -C
           node tempfrompythoncompressed.py.js bin/merge.py bin/merge.js tempfromnodecompressed.py.js
