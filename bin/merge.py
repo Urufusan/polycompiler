@@ -71,18 +71,19 @@ def main():
 def merge_files(python_content, js_content, compression=False):
     if compression:
         py_b = zlib.compress(python_content, 9)
-        # js_b = zlib.compress(js_content, 9)
+        js_b = zlib.compress(js_content, 9)
         # TODO: figure out compression for JS on Node and Web
     else:
         py_b = python_content
+        js_b = js_content
 
     str_python_content = base64.b64encode(py_b).decode(encoding="utf-8")
-    str_js_content = base64.b64encode(js_content).decode(encoding="utf-8")
+    str_js_content = base64.b64encode(js_b).decode(encoding="utf-8")
 
     # eval(["print('Hello, py!')", "console.log('Hello, js!')"][1|0==2])
     # await new Response((await new Blob([Uint8Array.from(atob("eNorKMrMK9FQ8kjNycnXUQjPL8pJUVTSBABZLgcs"),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream("deflate")))).text();
     if compression:
-        return f"""eval(["exec(__import__('zlib').decompress(__import__('base64').b64decode('{str_python_content}')).decode(encoding='utf-8',errors='ignore'))","eval(atob('{str_js_content}'))"][1|0==2]);"""
+        return f"""eval(["exec(__import__('zlib').decompress(__import__('base64').b64decode('{str_python_content}')).decode(encoding='utf-8',errors='ignore'))","eval(await new Response((await new Blob([Uint8Array.from(atob('{str_js_content}'),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream('deflate')))).text())"][1|0==2]);"""
     else:
         return f"""eval(["exec(__import__('base64').b64decode('{str_python_content}').decode(encoding='utf-8',errors='ignore'))","eval(atob('{str_js_content}'))"][1|0==2]);"""
 
