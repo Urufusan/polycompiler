@@ -43,5 +43,9 @@ jobs:
 
       - name: Compression test
         run: |
-          python3 tempfrompython.py.js bin/merge.py bin/merge.js tempfrompythoncompressed.py.js -C
-          node tempfrompythoncompressed.py.js bin/merge.py bin/merge.js tempfromnodecompressed.py.js
+          python3 tempfrompython2.py.js bin/merge.py bin/merge.js tempfrompythoncompressed.py.js -C
+          node tempfromnode2.py.js bin/merge.py bin/merge.js tempfromnodecompressed.py.js -C
+
+      - name: Third (compressed) iteration diff check
+        run: |
+          diff tempfrompythoncompressed.py.js tempfromnodecompressed.py.js
