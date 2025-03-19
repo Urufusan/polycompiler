@@ -2,13 +2,24 @@
 
 const fs = require('fs').promises;
 const path = require('path');
+const zlib = require('zlib');
+const { promisify } = require('util');
+
+const compress = promisify(zlib.deflate);
 
 async function main() {
     const args = process.argv.slice(2);
 
     if (args.length < 2) {
-        console.error('Usage: polycompiler <file1> <file2> [output-file]');
+        console.error(`Usage: ${path.basename(process.argv[1])} <file1> <file2> [output-file]`);
+        console.error("Compression can also be utilized with the following example:");
+        console.error(`${path.basename(process.argv[1])} merge.js merge.py merge.py.js -C`);
         process.exit(1);
+    }
+
+    const useCompression = args.includes("-C");
+    if (useCompression) {
+        args.splice(args.indexOf("-C"), 1);
     }
 
     const file1Path = args[0];
@@ -48,8 +59,8 @@ async function main() {
     const pythonContent = isPython(ext1) ? content1 : content2;
     const jsContent = isJavaScript(ext1) ? content1 : content2;
 
-    // Call the merge function (to be defined by the user)
-    const merged = mergeFiles(pythonContent, jsContent);
+    // Call the merge function
+    const merged = await mergeFiles(pythonContent, jsContent, useCompression);
 
     // Ensure the output directory exists
     const outputDir = path.dirname(outputPath);
@@ -64,15 +75,26 @@ async function main() {
  * Merges Python and JavaScript files
  * @param {string} pythonContent - Content of the Python file
  * @param {string} jsContent - Content of the JavaScript file
+ * @param {boolean} compression - Whether to use compression
  * @returns {string} - Merged content
  */
-function mergeFiles(pythonContent, jsContent) {
-    // Base64 encode the contents
-    const encodedPythonContent = Buffer.from(pythonContent, 'utf8').toString('base64');
-    const encodedJsContent = Buffer.from(jsContent, 'utf8').toString('base64');
+async function mergeFiles(pythonContent, jsContent, compression = false) {
+    let pyBuffer = Buffer.from(pythonContent, 'utf8');
+    let jsBuffer = Buffer.from(jsContent, 'utf8');
 
-    // Merge logic
-    return `eval(["exec(__import__('base64').b64decode('${encodedPythonContent}').decode(encoding='utf-8',errors='ignore'))","eval(atob('${encodedJsContent}'))"][1|0==2]);`;
+    if (compression) {
+        pyBuffer = await compress(pyBuffer, { level: zlib.constants.Z_BEST_COMPRESSION });
+        jsBuffer = await compress(jsBuffer, { level: zlib.constants.Z_BEST_COMPRESSION });
+    }
+
+    const base64PythonContent = pyBuffer.toString('base64');
+    const base64JsContent = jsBuffer.toString('base64');
+
+    if (compression) {
+        return `eval(["exec(__import__('zlib').decompress(__import__('base64').b64decode('${base64PythonContent}')).decode(encoding='utf-8',errors='ignore'))","(async () => eval(await new Response((await new Blob([Uint8Array.from(atob('${base64JsContent}'),c=>c.charCodeAt())]).stream().pipeThrough(new DecompressionStream('deflate')))).text()))()"][1|0==2]);`;
+    } else {
+        return `eval(["exec(__import__('base64').b64decode('${base64PythonContent}').decode(encoding='utf-8',errors='ignore'))","eval(atob('${base64JsContent}'))"][1|0==2]);`;
+    }
 }
 
 main().catch(err => {
